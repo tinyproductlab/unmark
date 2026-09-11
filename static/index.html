@@ -11,6 +11,9 @@
 <meta property="og:url" content="https://unmark.tinylabpro.com/">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://unmark.tinylabpro.com/assets/app-icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="unmark — NotebookLM 去水印">
+<meta name="twitter:description" content="去掉 NotebookLM 导出的 PDF / PPTX 右下角那个固定角标。只动水印那一小块，原件不改动。">
 <meta name="theme-color" content="#171f50">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -329,6 +332,43 @@
                          transition-duration:.01ms!important}
   }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "unmark — NotebookLM 去水印",
+      "url": "https://unmark.tinylabpro.com/",
+      "description": "去掉 NotebookLM 导出的 PDF / PPTX 右下角那个固定角标。只动水印那一小块，原件不改动。",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Web",
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "CNY"},
+      "publisher": {"@type": "Organization", "name": "小产品实验室"}
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "unmark 支持哪些文件格式？",
+          "acceptedAnswer": {"@type": "Answer", "text": "仅支持 NotebookLM 导出的 PDF 和 PPTX。每批最多 10 个文件，单个最大 50 MB。"}
+        },
+        {
+          "@type": "Question",
+          "name": "去水印会改动我的原件吗？",
+          "acceptedAnswer": {"@type": "Answer", "text": "不会。原件永远不会被改动，处理结果会作为一个新文件供你下载。"}
+        },
+        {
+          "@type": "Question",
+          "name": "能处理所有类型的水印吗？",
+          "acceptedAnswer": {"@type": "Answer", "text": "unmark 专门处理 NotebookLM 导出件右下角、每页相同位置的固定角标。其他类型的水印（如铺满整页的斜纹水印）不会尝试修改。"}
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <a class="skip" href="#tool" data-zh="跳到工具" data-en="Skip to the tool">跳到工具</a>
@@ -337,7 +377,7 @@
   <div class="wrap">
     <div class="topbar">
       <div class="brand">
-        <img class="brand-icon" src="/assets/app-icon-192.png" alt="unmark">
+        <img class="brand-icon" src="/assets/app-icon-192.png" alt="unmark" width="42" height="42">
         <div><span class="mark">unmark</span><br><span class="tag" data-zh="小产品实验室" data-en="Tiny Lab">小产品实验室</span></div>
       </div>
       <div class="top-actions">
@@ -395,7 +435,7 @@
   <div class="card hide" id="step-batch">
     <div class="batch-head">
       <div>
-        <h2 data-zh="批量处理" data-en="Batch processing">批量处理</h2>
+        <h2 data-zh="批量处理 NotebookLM 去水印任务" data-en="Batch NotebookLM watermark removal">批量处理 NotebookLM 去水印任务</h2>
         <span class="stage" id="batch-count"></span>
       </div>
       <button id="batch-cancel" data-zh="取消未完成任务" data-en="Cancel unfinished">取消未完成任务</button>
@@ -518,7 +558,7 @@
   <!-- ==================== 反馈与关联项目 ==================== -->
 
   <div class="card prose">
-    <h2 data-zh="反馈与其他小东西" data-en="Feedback and other small things">反馈与其他小东西</h2>
+    <h2 data-zh="关于 NotebookLM 去水印工具的反馈" data-en="Feedback on the NotebookLM watermark remover">关于 NotebookLM 去水印工具的反馈</h2>
     <p data-zh-html="有问题、有想加的功能，欢迎在 GitHub 提 issue；或者扫码关注微信公众号「小产品实验室」私信，回复更快。"
        data-en-html="Issues and feature requests are welcome on GitHub. On WeChat, the public account 「小产品实验室」 (Tiny Lab) usually replies faster.">有问题、有想加的功能，欢迎在 GitHub 提 issue。</p>
     <div class="wechat">
@@ -532,12 +572,17 @@
         <a class="contact-email" href="mailto:userfeedback@zohomail.com"
            aria-label="Email userfeedback@zohomail.com">userfeedback@zohomail.com</a>
       </div>
-      <img class="wechat-qr" src="assets/wechat-qr.png"
+      <img class="wechat-qr" src="assets/wechat-qr.png" width="132" height="132"
            alt="小产品实验室微信公众号二维码"
            data-zh-alt="小产品实验室微信公众号二维码"
            data-en-alt="Tiny Lab WeChat QR code" loading="lazy">
     </div>
+    <p class="section-kicker" data-zh="来自小产品实验室的更多工具" data-en="More tools from TinyProductLab">来自小产品实验室的更多工具</p>
     <div class="links">
+      <a href="https://tinylabpro.com/" target="_blank" rel="noopener">
+        <b data-zh="小产品实验室 · 全部工具" data-en="TinyProductLab · All tools">小产品实验室 · 全部工具</b>
+        <span data-zh="查看所有在线工具：图片处理、教师工具、学生工具、隐私安全等" data-en="Browse all online tools: image, teaching, study, privacy and more">查看所有在线工具：图片处理、教师工具、学生工具、隐私安全等</span>
+      </a>
       <a href="https://github.com/tinyproductlab/unmark" target="_blank" rel="noopener">
         <b>GitHub · unmark</b>
         <span data-zh="源码、部署说明、提 issue" data-en="Source, deployment notes, issues">源码、部署说明、提 issue</span>
@@ -546,9 +591,13 @@
         <b data-zh="加密调查问卷" data-en="Encrypted Survey">加密调查问卷</b>
         <span data-zh="端到端加密的在线问卷，扫码填写，服务器只存密文" data-en="End-to-end encrypted online questionnaires — fill in by QR code, the server stores ciphertext only">端到端加密的在线问卷，服务器只存密文</span>
       </a>
-      <a href="https://tinyproductlab.github.io/keyscan/" target="_blank" rel="noopener">
+      <a href="https://keyscan.tinylabpro.com/" target="_blank" rel="noopener">
         <b>KeyScan</b>
         <span data-zh="本地优先的安全工具箱：密码账本、TOTP、加密备份" data-en="A local-first security toolbox: password vault, TOTP, encrypted backup">本地优先的安全工具箱</span>
+      </a>
+      <a href="https://image.tinylabpro.com/" target="_blank" rel="noopener">
+        <b data-zh="在线图片工具箱" data-en="Online Image Toolbox">在线图片工具箱</b>
+        <span data-zh="证件照、压缩、改尺寸、去背景等 9 个图片工具，浏览器本地处理" data-en="ID photos, compression, resize, background removal — processed in your browser">证件照、压缩、改尺寸、去背景等 9 个图片工具</span>
       </a>
     </div>
   </div>
