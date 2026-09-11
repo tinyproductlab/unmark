@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>unmark · 去掉 PDF 右下角的固定角标水印</title>
+<title data-t="title">unmark · NotebookLM 去水印：去掉 PDF/PPTX 右下角角标</title>
 <meta name="description" content="去掉 PDF 与 PPTX 右下角的固定角标水印（NotebookLM 导出等）。可在线用，也可在自己电脑上跑；原件不改写。开源，MIT 协议。">
-<meta property="og:title" content="unmark · 去掉 PDF 右下角的固定角标水印">
+<meta property="og:title" content="unmark · NotebookLM 去水印：去掉 PDF/PPTX 右下角角标">
 <meta property="og:description" content="在线用或本机跑，支持 PDF 与 PPTX，原件不改写。开源，MIT 协议。">
 <meta property="og:type" content="website">
 <link rel="icon" href="unmark-icon.png" type="image/png">
@@ -38,8 +38,7 @@
       font-size:13.5px;line-height:1.7;margin:14px 0}
   pre code{background:none;padding:0;color:inherit;font-size:inherit}
 
-  /* 顶部 */
-  header{padding:72px 0 8px}
+  header{padding:72px 0 8px;position:relative}
   .logo{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:15px;
         letter-spacing:.02em;color:var(--muted);margin-bottom:26px}
   .logo img{display:block;width:40px;height:40px;border-radius:10px;object-fit:cover}
@@ -52,8 +51,9 @@
   .btn:hover{border-color:var(--accent);color:var(--accent)}
   .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
   .btn.primary:hover{background:var(--accent-dark);border-color:var(--accent-dark);color:#fff}
+  .lang-toggle{position:absolute;top:72px;right:0;font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:700}
+  .lang-toggle:hover{border-color:var(--accent);color:var(--accent)}
 
-  /* 通用块 */
   section{padding:44px 0;border-top:1px solid var(--line)}
   section:first-of-type{border-top:none}
   h2{font-size:21px;margin:0 0 8px;letter-spacing:-.01em}
@@ -64,35 +64,25 @@
   li{margin-bottom:7px}
   li::marker{color:var(--muted)}
 
-  /* 提示条 */
   .callout{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);
            border-radius:0 11px 11px 0;padding:16px 20px;margin:20px 0}
   .callout p:last-child{margin-bottom:0}
   .callout strong{color:var(--ink)}
 
-  /* 示意图 */
-  .demo{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;
-        margin:22px 0 10px}
+  .demo{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin:22px 0 10px}
   .shot{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:12px}
   .shot svg{display:block;width:100%;height:auto;border-radius:5px}
   .shot span{display:block;text-align:center;font-size:12.5px;color:var(--muted);margin-top:9px}
   .arrow{color:var(--muted);font-size:19px}
-  @media (max-width:560px){
-    .demo{grid-template-columns:1fr;gap:10px}
-    .arrow{text-align:center;transform:rotate(90deg)}
-  }
+  @media (max-width:560px){.demo{grid-template-columns:1fr;gap:10px}.arrow{text-align:center;transform:rotate(90deg)}}
 
-  /* 步骤 */
   ol.steps{counter-reset:s;list-style:none;padding:0;margin:20px 0 0}
   ol.steps > li{counter-increment:s;position:relative;padding-left:40px;margin-bottom:26px}
-  ol.steps > li::before{content:counter(s);position:absolute;left:0;top:1px;
-    width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;
-    font-size:13.5px;font-weight:700;display:grid;place-items:center;line-height:1}
+  ol.steps > li::before{content:counter(s);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-size:13.5px;font-weight:700;display:grid;place-items:center;line-height:1}
   ol.steps h3{font-size:16.5px;margin:0 0 6px}
   ol.steps p{margin:0 0 8px;color:var(--muted)}
   ol.steps pre{margin:10px 0 0}
 
-  /* 表格 */
   table{width:100%;border-collapse:collapse;margin:16px 0;font-size:15px}
   th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
   th{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
@@ -101,45 +91,54 @@
   footer{border-top:1px solid var(--line);padding:32px 0 56px;color:var(--muted);font-size:14px}
   footer a{color:var(--muted)}
   footer a:hover{color:var(--accent)}
+  .tpl-topbar{padding:10px 0;font-size:13px}
+  .tpl-topbar a{color:var(--muted);text-decoration:none}
+  .tpl-topbar a:hover{color:var(--accent)}
+  .tpl-footer{display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
+  .tpl-footer-brand{font-weight:700;color:var(--ink);margin:0}
+  .tpl-footer-links{display:flex;flex-wrap:wrap;gap:18px;justify-content:center}
+  .tpl-footer-links a{text-decoration:none}
+  .tpl-footer-note{margin:4px 0 0;font-size:13px}
+  .tpl-footer-copy{margin:0;font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
 
 <div class="wrap">
 
+<div class="tpl-topbar"><a href="https://tinylabpro.com/">← TinyProductLab 小产品实验室</a></div>
+
 <header>
+  <button class="lang-toggle" type="button" id="langToggle">EN</button>
   <div class="logo">
     <img src="unmark-icon.png" alt="unmark">
     unmark
   </div>
-  <h1>去掉 PDF 右下角<br>那个甩不掉的角标</h1>
-  <p class="lede">
+  <h1 data-t="h1">去掉 PDF 右下角<br>那个甩不掉的角标</h1>
+  <p class="lede" data-t="lede">
     NotebookLM 导出的 PDF，每一页右下角都盖着一个固定角标。这个工具把它抹掉，
     其余像素一个不动。
   </p>
   <div class="cta">
-    <a class="btn primary" href="#install">怎么用</a>
-    <a class="btn" href="https://tinylabpro.com/">小产品实验室主页</a>
-    <a class="btn" href="https://github.com/tinyproductlab/unmark">在 GitHub 上看代码</a>
+    <a class="btn primary" href="#install" data-t="howto">怎么用</a>
+    <a class="btn" href="https://tinylabpro.com/" data-t="home">小产品实验室主页</a>
+    <a class="btn" href="https://github.com/tinyproductlab/unmark" data-t="github">在 GitHub 上看代码</a>
   </div>
 </header>
 
 <section>
   <div class="callout">
-    <p><strong>两种用法，随你挑。</strong>想直接用，打开
-    <a href="https://unmark.tinylabpro.com/">unmark.tinylabpro.com</a> 把文件拖进去就行——
-    文件会上传到服务器处理，用完自动删除。想让文件完全不离开自己的硬盘，就下载下来装在
-    本机跑：程序只监听本机地址，压根没有上传这个动作。这一页是说明书。</p>
+    <p><strong data-t="calloutTitle">两种用法，随你挑。</strong><span data-t="calloutText">想直接用，打开 <a href="https://unmark.tinylabpro.com/">unmark.tinylabpro.com</a> 把文件拖进去就行——文件会上传到服务器处理，用完自动删除。想让文件完全不离开自己的硬盘，就下载下来装在本机跑：程序只监听本机地址，压根没有上传这个动作。这一页是说明书。</span></p>
   </div>
 </section>
 
 <section>
-  <h2>它处理的是哪种水印</h2>
-  <p class="note">整页是一张图、角标烙在像素里的那种。</p>
+  <h2 data-t="s1h">它处理的是哪种水印</h2>
+  <p class="note" data-t="s1note">整页是一张图、角标烙在像素里的那种。</p>
 
   <div class="demo">
     <div class="shot">
-      <svg viewBox="0 0 240 150" role="img" aria-label="处理前：页面右下角有角标">
+      <svg viewBox="0 0 240 150" role="img" aria-label="before">
         <rect width="240" height="150" fill="#fff" stroke="#E4E7EC"/>
         <g fill="#C8CDD8">
           <rect x="20" y="22" width="150" height="7" rx="3.5"/>
@@ -150,14 +149,13 @@
           <rect x="20" y="99" width="140" height="5" rx="2.5"/>
         </g>
         <rect x="150" y="126" width="70" height="11" rx="3" fill="#1D2939" opacity=".72"/>
-        <rect x="146" y="122" width="78" height="19" rx="5" fill="none"
-              stroke="#B42318" stroke-width="1.6" stroke-dasharray="4 3"/>
+        <rect x="146" y="122" width="78" height="19" rx="5" fill="none" stroke="#B42318" stroke-width="1.6" stroke-dasharray="4 3"/>
       </svg>
-      <span>处理前</span>
+      <span data-t="before">处理前</span>
     </div>
     <div class="arrow">→</div>
     <div class="shot">
-      <svg viewBox="0 0 240 150" role="img" aria-label="处理后：角标消失，正文不变">
+      <svg viewBox="0 0 240 150" role="img" aria-label="after">
         <rect width="240" height="150" fill="#fff" stroke="#E4E7EC"/>
         <g fill="#C8CDD8">
           <rect x="20" y="22" width="150" height="7" rx="3.5"/>
@@ -167,76 +165,73 @@
           <rect x="20" y="86" width="200" height="5" rx="2.5"/>
           <rect x="20" y="99" width="140" height="5" rx="2.5"/>
         </g>
-        <rect x="146" y="122" width="78" height="19" rx="5" fill="none"
-              stroke="#067647" stroke-width="1.6" stroke-dasharray="4 3"/>
+        <rect x="146" y="122" width="78" height="19" rx="5" fill="none" stroke="#067647" stroke-width="1.6" stroke-dasharray="4 3"/>
       </svg>
-      <span>处理后</span>
+      <span data-t="after">处理后</span>
     </div>
   </div>
-  <p style="font-size:13.5px;color:var(--muted);margin-top:4px">
+  <p style="font-size:13.5px;color:var(--muted);margin-top:4px" data-t="s1demoNote">
     上图是示意，不是实际截图。
   </p>
 
-  <p>
+  <p data-t="s1text">
     如果角标是可选中的<em>文字</em>，那它是一个独立的文本对象，用 PDF 编辑器直接删掉就行，
     比涂像素干净得多。所以这个工具遇到有文字层的页会主动跳过，不去趟那趟浑水。
   </p>
 </section>
 
 <section>
-  <h2>它怎么知道哪块是水印</h2>
-  <p class="note">不靠内置模板图，所以换字体、换版本、换成别家的角标，一样认得出来。</p>
-  <p>
+  <h2 data-t="s2h">它怎么知道哪块是水印</h2>
+  <p class="note" data-t="s2note">不靠内置模板图，所以换字体、换版本、换成别家的角标，一样认得出来。</p>
+  <p data-t="s2p1">
     水印的定义就是「内容在变，它不变」的那部分像素。所以做法是把若干页的右下角叠起来求交集 ——
     在几乎每一页的<strong>同一个坐标</strong>都长得一样的，才算数。
   </p>
-  <p>两路投票，先找深色的，找不到再找浅的：</p>
+  <p data-t="s2p2">两路投票，先找深色的，找不到再找浅的：</p>
   <ul>
-    <li><strong>暗像素跨页交集</strong> —— 对付深色角标，NotebookLM 属于这类</li>
-    <li><strong>局部反差跨页交集</strong> —— 第一路没结果才启用，能抓浅色和半透明的角标。
-        判据是「和自己周围不一样」，所以整页都白的页边不会被误当成水印</li>
+    <li><strong data-t="s2li1t">暗像素跨页交集</strong> —— <span data-t="s2li1d">对付深色角标，NotebookLM 属于这类</span></li>
+    <li><strong data-t="s2li2t">局部反差跨页交集</strong> —— <span data-t="s2li2d">第一路没结果才启用，能抓浅色和半透明的角标。判据是「和自己周围不一样」，所以整页都白的页边不会被误当成水印</span></li>
   </ul>
-  <p>
+  <p data-t="s2p3">
     要是找出来的区域超过整页的 0.5%，或者形状不像一行角标（太小、长宽比不对），
     一律判为认错了，<strong>直接中止不处理</strong>。宁可交还给你一个没动过的文件，也不乱涂一气。
   </p>
 </section>
 
 <section>
-  <h2>不会把你的文件搞坏</h2>
+  <h2 data-t="s3h">不会把你的文件搞坏</h2>
   <ul>
-    <li><strong>原件永远不改写</strong>，结果写进一个新文件</li>
-    <li>每页修复完，强制还原选区之外的像素并逐一断言；中间图用 PNG 无损编码，还做一次编解码往返核对</li>
-    <li>写出之后重新打开，抽页逐像素复核 —— 确认选区之外真的一个像素都没变</li>
-    <li>本机跑的时候服务只监听 <code>127.0.0.1</code>，文件不出这台电脑；在线版则用完即删</li>
+    <li><strong data-t="s3li1t">原件永远不改写</strong>，<span data-t="s3li1d">结果写进一个新文件</span></li>
+    <li data-t="s3li2">每页修复完，强制还原选区之外的像素并逐一断言；中间图用 PNG 无损编码，还做一次编解码往返核对</li>
+    <li data-t="s3li3">写出之后重新打开，抽页逐像素复核 —— 确认选区之外真的一个像素都没变</li>
+    <li data-t="s3li4">本机跑的时候服务只监听 <code>127.0.0.1</code>，文件不出这台电脑；在线版则用完即删</li>
   </ul>
 </section>
 
 <section id="install">
-  <h2>怎么用</h2>
-  <p class="note">需要电脑上有 Python 3.10 或更新的版本。</p>
+  <h2 data-t="s4h">怎么用</h2>
+  <p class="note" data-t="s4note">需要电脑上有 Python 3.10 或更新的版本。</p>
 
   <ol class="steps">
     <li>
-      <h3>下载代码</h3>
-      <p>有 git 就用这条；没有的话，去 GitHub 页面点 Code → Download ZIP 也一样。</p>
+      <h3 data-t="s4step1h">下载代码</h3>
+      <p data-t="s4step1p">有 git 就用这条；没有的话，去 GitHub 页面点 Code → Download ZIP 也一样。</p>
 <pre><code>git clone https://github.com/tinyproductlab/unmark.git
 cd unmark</code></pre>
     </li>
     <li>
-      <h3>装依赖（只需一次）</h3>
+      <h3 data-t="s4step2h">装依赖（只需一次）</h3>
 <pre><code>python3 -m pip install -r requirements.txt</code></pre>
     </li>
     <li>
-      <h3>启动</h3>
-      <p>Mac 上双击 <code>启动去水印网页.command</code> 就行，浏览器会自己打开。
-         也可以用命令行：</p>
+      <h3 data-t="s4step3h">启动</h3>
+      <p data-t="s4step3p">Mac 上双击 <code>启动去水印网页.command</code> 就行，浏览器会自己打开。也可以用命令行：</p>
 <pre><code>python3 server.py</code></pre>
-      <p>然后把 PDF 拖进页面，等进度跑完，看「处理前 / 处理后」的放大对比，确认没问题再下载。</p>
+      <p data-t="s4step3p2">然后把 PDF 拖进页面，等进度跑完，看「处理前 / 处理后」的放大对比，确认没问题再下载。</p>
     </li>
   </ol>
 
-  <p style="margin-top:26px">也可以当成 Python 库直接调用：</p>
+  <p style="margin-top:26px" data-t="s4lib">也可以当成 Python 库直接调用：</p>
 <pre><code>from unwatermark import clean_pdf
 
 result = clean_pdf("输入.pdf", "输出.pdf")
@@ -244,43 +239,98 @@ print(result.success, result.message)</code></pre>
 </section>
 
 <section>
-  <h2>先说在前面的几件事</h2>
+  <h2 data-t="s5h">先说在前面的几件事</h2>
   <table>
     <tr>
-      <th style="width:30%">情况</th>
-      <th>说明</th>
+      <th style="width:30%" data-t="s5th1">情况</th>
+      <th data-t="s5th2">说明</th>
     </tr>
     <tr>
-      <td>输出文件更大</td>
-      <td>例如 15.9 MB 变成 19.3 MB。因为中间图用 PNG 无损重编码，而原件是 JPEG。
-          要的是像素不失真，代价就是体积。</td>
+      <td data-t="s5r1t">输出文件更大</td>
+      <td data-t="s5r1d">例如 15.9 MB 变成 19.3 MB。因为中间图用 PNG 无损重编码，而原件是 JPEG。要的是像素不失真，代价就是体积。</td>
     </tr>
     <tr>
-      <td>有文字层的页会跳过</td>
-      <td>那种水印多半是能直接删除的文本对象，不该用涂像素的办法处理。</td>
+      <td data-t="s5r2t">有文字层的页会跳过</td>
+      <td data-t="s5r2d">那种水印多半是能直接删除的文本对象，不该用涂像素的办法处理。</td>
     </tr>
     <tr>
-      <td>一次只能处理一个文件</td>
-      <td>暂时还不支持批量导入。</td>
+      <td data-t="s5r3t">一次只能处理一个文件</td>
+      <td data-t="s5r3d">暂时还不支持批量导入。</td>
     </tr>
     <tr>
-      <td>认不出来就不动手</td>
-      <td>检测不到、或者检测结果不合理，程序会明确告诉你「未处理」，而不是硬涂一块。</td>
+      <td data-t="s5r4t">认不出来就不动手</td>
+      <td data-t="s5r4d">检测不到、或者检测结果不合理，程序会明确告诉你「未处理」，而不是硬涂一块。</td>
     </tr>
   </table>
 </section>
 
-<footer>
-  <p style="margin-bottom:6px">
-    开源，MIT 协议 ·
-    <a href="https://github.com/tinyproductlab/unmark">GitHub</a> ·
-    <a href="https://github.com/tinyproductlab/unmark/issues">反馈问题</a>
-  </p>
-  <p style="margin:0">
-    请只用它处理你有权处理的文件。
-  </p>
+<footer class="tpl-footer">
+  <p class="tpl-footer-brand">TinyProductLab · 小产品实验室</p>
+  <nav class="tpl-footer-links">
+    <a href="https://tinylabpro.com/">更多工具</a>
+    <a href="https://tinylabpro.com/about">关于我们</a>
+    <a href="https://tinylabpro.com/privacy">隐私政策</a>
+    <a href="https://tinylabpro.com/terms">使用条款</a>
+    <a href="https://tinylabpro.com/contact">联系我们</a>
+  </nav>
+  <p class="tpl-footer-note" data-t="footer3">请只用它处理你有权处理的文件。</p>
+  <p class="tpl-footer-copy">© 2026 TinyProductLab</p>
 </footer>
 
 </div>
-</body>
+
+<script>
+const en={
+  title:'unmark · Remove NotebookLM watermarks from PDF/PPTX corner marks',
+  h1:'Remove that stubborn<br>corner mark from PDFs',
+  lede:'NotebookLM exports stamp a fixed corner mark on every page. This tool erases just that—every other pixel stays untouched.',
+  howto:'How to use',
+  home:'Tiny Product Lab home',
+  github:'View code on GitHub',
+  calloutTitle:'Two ways to use it—pick one.',
+  calloutText:'For immediate use, open <a href="https://unmark.tinylabpro.com/">unmark.tinylabpro.com</a> and drop your file in—it uploads to the server for processing and is auto-deleted afterward. To keep files entirely on your own disk, download and run it locally: the server only listens on localhost, there is no upload step at all. This page is the manual.',
+  s1h:'What kind of watermark it handles',
+  s1note:'The kind where the whole page is one image and the mark is baked into the pixels.',
+  before:'Before',
+  after:'After',
+  s1demoNote:'The diagram above is an illustration, not an actual screenshot.',
+  s1text:'If the mark is selectable <em>text</em>, it is a separate text object—just delete it in a PDF editor, much cleaner than painting over pixels. That is why this tool skips pages with a text layer; it will not wade into that mess.',
+  s2h:'How it finds the watermark',
+  s2note:'No built-in template images, so a different font, version, or brand of corner mark is still recognized.',
+  s2p1:'A watermark is simply the pixels that stay the same while everything else changes. So we stack the bottom-right corners of several pages and take the intersection—whatever looks identical at the <strong>same coordinates</strong> on nearly every page counts.',
+  s2p2:'Two passes, dark first, then light if nothing is found:',
+  s2li1t:'Dark-pixel cross-page intersection',s2li1d:'For dark corner marks; NotebookLM falls into this category.',
+  s2li2t:'Local-contrast cross-page intersection',s2li2d:'Only runs if the first pass finds nothing. Catches light and semi-transparent marks. The criterion is "different from its surroundings," so all-white margins are not mistaken for watermarks.',
+  s2p3:'If the detected area exceeds 0.5% of the page, or does not look like a single line of mark (too small, wrong aspect ratio), it is judged a false positive and <strong>processing stops immediately</strong>. Better to hand back an untouched file than to paint blindly.',
+  s3h:'It will not corrupt your files',
+  s3li1t:'The original is never modified',s3li1d:'results go into a new file',
+  s3li2:'After repairing each page, pixels outside the selection are force-restored and asserted one by one; intermediate images use lossless PNG encoding, plus a round-trip encode-decode check.',
+  s3li3:'After writing, the file is reopened and spot-checked pixel by pixel—confirming that outside the selection, not a single pixel has changed.',
+  s3li4:'When running locally the server listens only on <code>127.0.0.1</code>, so files never leave this machine; the online version deletes them immediately after use.',
+  s4h:'How to use',
+  s4note:'Requires Python 3.10 or newer on your computer.',
+  s4step1h:'Download the code',
+  s4step1p:'Use this if you have git; otherwise go to the GitHub page and click Code → Download ZIP.',
+  s4step2h:'Install dependencies (once)',
+  s4step3h:'Launch',
+  s4step3p:'On Mac, double-click <code>启动去水印网页.command</code> and the browser opens by itself. Or use the command line:',
+  s4step3p2:'Then drag the PDF into the page, wait for the progress to finish, review the before/after zoom comparison, and download once it looks right.',
+  s4lib:'You can also use it directly as a Python library:',
+  s5h:'A few things to know upfront',
+  s5th1:'Case',s5th2:'Note',
+  s5r1t:'Output file is larger',s5r1d:'For example, 15.9 MB becomes 19.3 MB. Because intermediate images are re-encoded with lossless PNG while the original is JPEG. Pixel-perfect fidelity comes at the cost of file size.',
+  s5r2t:'Pages with a text layer are skipped',s5r2d:'That kind of mark is usually a deletable text object and should not be handled by painting over pixels.',
+  s5r3t:'One file at a time',s5r3d:'Batch import is not yet supported.',
+  s5r4t:'If it cannot recognize, it will not touch it',s5r4d:'If nothing is detected or the result looks unreasonable, the program clearly tells you "not processed" rather than forcing a paint job.',
+  footer1:'Open source, MIT License',
+  footer2:'Report issues',
+  footer3:'Please only use it on files you have the right to process.'
+};
+const zh=Object.fromEntries([...document.querySelectorAll('[data-t]')].map(e=>[e.dataset.t,e.innerHTML]));
+let lang=localStorage.getItem('unmark-lang')||'zh';
+function render(){const d=lang==='en'?en:zh;document.querySelectorAll('[data-t]').forEach(e=>e.innerHTML=d[e.dataset.t]);document.documentElement.lang=lang==='en'?'en':'zh-CN';document.title=lang==='en'?en.title:zh.title;document.getElementById('langToggle').textContent=lang==='en'?'中文':'EN';}
+document.getElementById('langToggle').onclick=()=>{lang=lang==='en'?'zh':'en';localStorage.setItem('unmark-lang',lang);render();};
+render();
+</script>
+<style>.ad-slot-left,.ad-slot-right{display:none}@media(min-width:1280px){.ad-slot-left,.ad-slot-right{display:flex;position:fixed;top:50%;transform:translateY(-50%);width:160px;min-height:600px;align-items:flex-start;justify-content:center;z-index:5;pointer-events:none}.ad-slot-left{left:8px}.ad-slot-right{right:8px}.ad-slot-left::before,.ad-slot-right::before{content:"Ad";font-size:11px;color:#c0c5cf;letter-spacing:.05em}}</style><aside class="ad-slot-left" aria-hidden="true"></aside><aside class="ad-slot-right" aria-hidden="true"></aside></body>
 </html>
