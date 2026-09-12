@@ -435,6 +435,25 @@ def create_app() -> FastAPI:
         return FileResponse(STATIC_DIR / "sitemap.xml", media_type="application/xml",
                             headers={"Cache-Control": "public, max-age=86400"})
 
+    # 政策页是固定文件而不是任意静态路径，既能被搜索引擎发现，也不会开放目录读取。
+    @app.get("/privacy", response_class=FileResponse)
+    @app.get("/privacy.html", response_class=FileResponse)
+    def privacy_page() -> FileResponse:
+        return FileResponse(STATIC_DIR / "privacy.html", media_type="text/html; charset=utf-8",
+                            headers={"Cache-Control": "public, max-age=3600"})
+
+    @app.get("/terms", response_class=FileResponse)
+    @app.get("/terms.html", response_class=FileResponse)
+    def terms_page() -> FileResponse:
+        return FileResponse(STATIC_DIR / "terms.html", media_type="text/html; charset=utf-8",
+                            headers={"Cache-Control": "public, max-age=3600"})
+
+    @app.get("/about", response_class=FileResponse)
+    @app.get("/about.html", response_class=FileResponse)
+    def about_page() -> FileResponse:
+        return FileResponse(STATIC_DIR / "about.html", media_type="text/html; charset=utf-8",
+                            headers={"Cache-Control": "public, max-age=3600"})
+
     @app.get("/manifest.webmanifest", response_class=FileResponse)
     def web_manifest() -> FileResponse:
         return FileResponse(STATIC_DIR / "manifest.webmanifest",
