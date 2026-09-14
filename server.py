@@ -105,6 +105,30 @@ def render_slide(path: Path, page_index: int) -> Image.Image:
         return Image.open(BytesIO(archive.read(parts[page_index]))).convert("RGB")
 
 
+def export_pdf_as_webp(source: Path, destination: Path, *, scale: float = 1.5,
+                       quality: int = 90) -> int:
+    """把 PDF 的每一页写成 WebP，并打进一个 ZIP。
+
+    WebP 本身已压缩，外层 ZIP 只负责把多页文件收在一起，不能指望它再省多少体积。
+    导出基于去水印后的 PDF，原始文件从不参与写入。
+    """
+    with fitz.open(source) as document:
+        if document.page_count < 1:
+            raise ValueError("这个 PDF 没有可导出的页面。")
+        page_count = document.page_count
+        with zipfile.ZipFile(destination, "w", compression=zipfile.ZIP_STORED) as archive:
+            for index, pdf_page in enumerate(document, 1):
+                pixmap = pdf_page.get_pixmap(matrix=fitz.Matrix(scale, scale), alpha=False)
+                image = Image.frombytes("RGB", (pixmap.width, pixmap.height), pixmap.samples)
+                try:
+                    buffer = BytesIO()
+                    image.save(buffer, format="WEBP", quality=quality, method=4)
+                    archive.writestr(f"{source.stem}_{index:03d}.webp", buffer.getvalue())
+                finally:
+                    image.close()
+    return page_count
+
+
 @dataclass
 class Job:
     """一次去水印任务的全部状态；只活在内存里，进程退出即消失。"""
@@ -744,6 +768,29 @@ def create_app() -> FastAPI:
         return FileResponse(target, media_type=media,
                             filename=target.name,
                             headers={"Cache-Control": "no-transform"})
+
+    @app.get("/api/jobs/{job_id}/export/webp")
+    def export_webp(job_id: str, variant: str = "clean") -> FileResponse:
+        """导出清理后的 PDF 为逐页 WebP 图片包。"""
+        job = _ready_pdf(job_id)
+        if variant not in {"clean", "decorated"}:
+            raise HTTPException(status_code=400, detail="导出版本无效")
+        source = job.decorated if variant == "decorated" else job.destination
+        if source is None or not source.exists():
+            raise HTTPException(status_code=404, detail="要导出的 PDF 尚未生成")
+
+        suffix = "增强版" if variant == "decorated" else "去水印版"
+        archive = job.directory / f"{source.stem}_WebP图片包.zip"
+        try:
+            export_pdf_as_webp(source, archive)
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        return FileResponse(
+            archive,
+            media_type="application/zip",
+            filename=f"{_safe_stem(job.name)}_{suffix}_WebP图片包.zip",
+            headers={"Cache-Control": "no-transform"},
+        )
 
     @app.get("/api/batch/download")
     def download_batch(jobs: str = "") -> FileResponse:

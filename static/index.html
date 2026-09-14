@@ -551,6 +551,7 @@
 
     <div class="row" style="margin-top:20px">
       <button class="primary" id="download" data-zh="下载去水印后的文件" data-en="Download the cleaned file">下载去水印后的文件</button>
+      <button id="webp-download" class="hide" data-zh="导出 WebP 图片包" data-en="Export WebP image bundle">导出 WebP 图片包</button>
       <button id="again" data-zh="换一个文件" data-en="Use another file">换一个文件</button>
     </div>
   </div>
@@ -998,6 +999,7 @@ function succeed(s, quiet){
   $("banner").className = "banner ok";
   $("banner").textContent = "✅ " + line;
   $("download").classList.remove("hide");
+  $("webp-download").classList.toggle("hide", s.kind !== "pdf");
   $("decorate").classList.toggle("hide", s.kind !== "pdf");
   $("again").textContent = viewingBatch ? t("backToBatch")
                                          : $("again").getAttribute("data-" + LANG);
@@ -1194,6 +1196,7 @@ $("applypanel").onclick = async () => {
 };
 
 $("download").onclick = () => location.href = `/api/jobs/${job}/download`;
+$("webp-download").onclick = () => location.href = `/api/jobs/${job}/export/webp`;
 
 /* ---------- 导出增强：Logo / 自定义文字 ---------- */
 let decoMode = "logo";
